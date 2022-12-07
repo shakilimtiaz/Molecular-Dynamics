@@ -4,14 +4,14 @@ import matplotlib
 
 npart = 7 #7 points representing the particles are along each direction
 N = (npart - 1)*(npart - 1) #N is the number of real particles
-/*
-	Explanation: array of 36*36,
-	Since over a length space the first and the last points are the same, out of 7 only 6 will be real particles
-	hence the array is of size 36 by 36.
-*/
 
-command 'rm -rf output/*'
-command 'mkdir output'
+#Explanation: array of 36*36,
+#Since over a length space the first and the last points are the same, out of 7 only 6 will be real particles
+#hence the array is of size 36 by 36.
+
+
+command('rm -rf output')
+command('mkdir output')
 
 temp = 0.1 #temperature in scaled units
 box = 5.5 #total box length
@@ -89,7 +89,6 @@ for i in range(1, npart):
 
 #Start the time loop
 t = 0.0
-
 
 
 

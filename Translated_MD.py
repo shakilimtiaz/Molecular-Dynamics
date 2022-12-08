@@ -3,13 +3,6 @@ import random
 import matplotlib
 import os
 
-x = [] // x array
-y = [] // y array
-xm = [] // approximation of the previous x particle position
-ym = [] // approximation of the previous y particle position
-vx = [] // x velocity array
-vy = []
-
 npart = 7 #7 points representing the particles are along each direction
 N = (npart - 1)*(npart - 1) #N is the number of real particles
 
@@ -17,6 +10,12 @@ N = (npart - 1)*(npart - 1) #N is the number of real particles
 #Since over a length space the first and the last points are the same, out of 7 only 6 will be real particles
 #hence the array is of size 36 by 36.
 
+x = [0] * N #x array
+y = [0] * N #y array
+xm = [0] * N #approximation of the previous x particle position
+ym = [0] * N #approximation of the previous y particle position
+vx = [0] * N #x velocity array
+vy = [0] * N
 
 os.system('rm -rf output')
 os.system('mkdir output')
@@ -53,8 +52,8 @@ timesteps = timesteps + 10002 # + two more time steps
 for i in range(1, npart):
 	for j in range(1, npart):
 		I = j + (i - 1)*(npart - 1)
-		vx[I] = random() - 0.5
-		vy[I] = random() - 0.5
+		vx[I] = random.randn(0, 1) - 0.5
+		vy[I] = random.randn(0, 1) - 0.5
 #Since, initial kinetic energy must be zero, and energy is conserved
 #we initiate with zero sum of velocities along x and y direction
 #sumvx and sumvy are the component velocity of the centre of mass

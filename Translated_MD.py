@@ -90,9 +90,64 @@ for i in range(1, npart):
 #Start the time loop
 t = 0.0
 
+for K in range(0, timesteps):
+	for i in range(1, npart):
+		for j in range(1, npart):
+			I = j + (i - 1)*(npart - 1)
+			fx[I] = 0.0
+			fy[I] = 0.0
 
+	#start with zero potential energy
+	en = 0.0
 
+	#loop over all the particles:
+	#i should start from 1 to N-1 and j from 2 to N
+	#just to distinguish between the particles
 
+	for i in range(1, N):
+		for j in range(1, N+1):
+				#calculate the difference between the molecules one by one*/
+				xr = x[i] - x[j]
+				yr = y[i] - y[j]
+				#If the difference happens to be out of the box,
+				#create an image particle in the box maintaining the periodicity
+
+				if xr > boxby2:
+					xr = xr-box
+				elif xr < -boxby2:
+					xr = xr + box
+
+				if yr > boxby2:
+					yr = yr-box
+				elif yr < -boxby2:
+					yr = yr + box
+				
+				#square the difference
+				r2 = xr*xr + yr*yr
+
+				#If the difference is more than a certain number and less than
+				#the cutoff radius then only calulate the forces
+
+				if r2 > 1.e-12 and r2 < rc2:
+					r2i = 1./r2
+					r6i = r2i*r2i*r2i
+					ff = 48.*r2i*r6i*(r6i-0.5) #potential energy
+
+					#By Newton's thrid law if the first particle is
+					#moved to right the seond in the interaction would move left
+
+					fx[i] = fx[i] + ff*xr
+					fy[i] = fy[i] + ff*yr
+					fx[j] = fx[j] - ff*xr
+					fy[j] = fy[j] - ff*yr
+					en = en + 4.*r6i*(r6i-1.) - ecut
+
+#Integrate the equations of motion: push the particles to a new position
+		#Once again initiate the centre of mass velocities to be zero
+			sumvx = 0.0
+			sumvy = 0.0
+			sumv2x = 0.0
+			sumv2y = 0.0
 
 
 

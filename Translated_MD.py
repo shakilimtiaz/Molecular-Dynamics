@@ -144,10 +144,65 @@ for K in range(0, timesteps):
 
 #Integrate the equations of motion: push the particles to a new position
 		#Once again initiate the centre of mass velocities to be zero
-			sumvx = 0.0
-			sumvy = 0.0
-			sumv2x = 0.0
-			sumv2y = 0.0
+		sumvx = 0.0
+		sumvy = 0.0
+		sumv2x = 0.0
+		sumv2y = 0.0
+
+		for i in range(1, N + 1):
+			#Calculate the new positions from the verlet algorithm
+			xx = 2*x[i] - xm[i] +delt*delt*fx[i]
+			yy = 2*y[i] - ym[i] +delt*delt*fy[i]
+
+			if xx > box:
+				xx = xx - box
+			elif xx < 0:
+				xx = xx + box
+			
+			if yy > box:
+				yy = yy - box
+			elif yy < 0:
+				yy = yy + box
+			
+			xr = xx - xm[i]
+			yr = yy - ym[i]
+
+			if xr > boxby2:
+				xr = xr-box;
+			elif xr < -boxby2:
+				xr = xr + box;
+
+			if yr > boxby2:
+				yr = yr-box;
+			elif yr < -boxby2:
+				yr = yr + box
+			
+			vx[i] = xr/(2.*delt);
+			vy[i] = yr/(2.*delt);
+
+			#Update the centre of mass velocities
+			sumvx = sumvx + vx[i]
+			sumvy = sumvy + vy[i]
+			sumv2x = sumv2x + vx[i]*vx[i]
+			sumv2y = sumv2y + vy[i]*vy[i]
+
+			#Update positions in previous time
+			xm[i] = x[i]
+			ym[i] = y[i]
+			
+			#Update positions in current time
+			x[i] = xx
+			y[i] = yy
+
+		sumv2 = sumv2x + sumv2y
+
+		#Instantaneous temperature
+		temp = sumv2/(2.*N)
+
+		#Total energy per particle
+		etot = (en + 0.5*sumv2)/N
+
+		
 
 
 

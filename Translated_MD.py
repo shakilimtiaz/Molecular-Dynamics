@@ -49,11 +49,23 @@ timesteps = timesteps + 10002 # + two more time steps
 #Initialize the positions to start the program
 #i and j are the particle indices along x and y direction respectively
 
+rand_int = float(np.random.randint(0,1))
+
 for i in range(1, npart):
 	for j in range(1, npart):
 		I = j + (i - 1)*(npart - 1)
-		vx[I] = random.randn(0, 1) - 0.5
-		vy[I] = random.randn(0, 1) - 0.5
+		if i == 1 and j == 1:
+			x[1] = a/2
+			y[1] = a/2
+		else:
+			x[I] = x[1] + [i - 1]*a + rand_int*0.0005
+			y[I] = y[1] + [i - 1]*a + rand_int*0.0005
+
+for i in range(1, npart):
+	for j in range(1, npart):
+		I = j + (i - 1)*(npart - 1)
+		vx[I] = float() random.randint(0, 1) - 0.5
+		vy[I] = float() random.randint(0, 1) - 0.5
 #Since, initial kinetic energy must be zero, and energy is conserved
 #we initiate with zero sum of velocities along x and y direction
 #sumvx and sumvy are the component velocity of the centre of mass

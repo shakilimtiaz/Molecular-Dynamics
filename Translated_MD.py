@@ -3,6 +3,13 @@ import random
 import matplotlib
 import os
 
+x = [] // x array
+y = [] // y array
+xm = [] // approximation of the previous x particle position
+ym = [] // approximation of the previous y particle position
+vx = [] // x velocity array
+vy = []
+
 npart = 7 #7 points representing the particles are along each direction
 N = (npart - 1)*(npart - 1) #N is the number of real particles
 

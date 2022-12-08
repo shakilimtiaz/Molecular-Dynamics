@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import matplotlib
+import os
 
 npart = 7 #7 points representing the particles are along each direction
 N = (npart - 1)*(npart - 1) #N is the number of real particles
@@ -10,8 +11,8 @@ N = (npart - 1)*(npart - 1) #N is the number of real particles
 #hence the array is of size 36 by 36.
 
 
-command('rm -rf output')
-command('mkdir output')
+os.system('rm -rf output')
+os.system('mkdir output')
 
 temp = 0.1 #temperature in scaled units
 box = 5.5 #total box length

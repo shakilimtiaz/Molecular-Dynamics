@@ -59,8 +59,8 @@ for i in range(1, npart):
 			x[1] = a/2
 			y[1] = a/2
 		else:
-			x[I] = x[1] + [i - 1]*a + rand_int*0.0005
-			y[I] = y[1] + [i - 1]*a + rand_int*0.0005
+			x[I] = x[1] + (i-1)*a + rand_int*0.0005
+			y[I] = y[1] + (i-1)*a + rand_int*0.0005
 
 for i in range(1, npart):
 	for j in range(1, npart):

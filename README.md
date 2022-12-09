@@ -18,7 +18,7 @@ where,
 5. $A = 4 \epsilon \sigma^{12}$, $B = 4 \epsilon \sigma^{6}$ 
 6. Minimum value of $\Phi(r)$ at $r=r_{min}$.
 
-Lennard-Jones-type $r{−n}-r^{−m}$ pair potentials were proposed in 1925 by Jones [[1]](<https://royalsocietypublishing.org/doi/10.1098/rspa.1924.0081> "J. Jones, Proc R Soc London A, 1924, 106, 441–462") (later Lennard-Jones) to describe the cohesive energy of crystals of noble gases, such as Argon. The now conventional LJ 12-6 form was proposed by Lennard-Jones in 1931 [[2]](<https://iopscience.iop.org/article/10.1088/0959-5309/43/5/301> "J. E. Lennard-Jones, Proc Phys Soc, 1931, 43, 461–482") after London had derived that the dispersion interaction between atoms decays as $r^{−6}$ (at least, in the non-retarded regime). [[3]](<https://arxiv.org/pdf/1910.05746.pdf> "Wang, Xipeng, et al. "The Lennard-Jones potential: when (not) to use it." Physical Chemistry Chemical Physics 22.19 (2020): 10624-10633")
+Lennard-Jones-type $r{−n}-r^{−m}$ pair potentials were proposed in 1925 by Jones [[1]](<https://royalsocietypublishing.org/doi/10.1098/rspa.1924.0081> "J. Jones, Proc R Soc London A, 1924, 106, 441–462") (later Lennard-Jones) to describe the cohesive energy of crystals of noble gases, such as Argon. The now conventional LJ 12-6 form was proposed by Lennard-Jones in 1931 [[2]](<https://iopscience.iop.org/article/10.1088/0959-5309/43/5/301> "J. E. Lennard-Jones, Proc Phys Soc, 1931, 43, 461–482") after London had derived that the dispersion interaction between atoms decays as $r^{−6}$ (at least, in the non-retarded regime). [[3]](<https://arxiv.org/pdf/1910.05746.pdf> "Wang, Xipeng, et al. 'The Lennard-Jones potential: when (not) to use it.' Physical Chemistry Chemical Physics 22.19 (2020): 10624-10633")
 
 ## Getting Started
 

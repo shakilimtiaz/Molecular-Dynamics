@@ -86,7 +86,8 @@ int main(void){
 	the disance after which the potential of one molecule does not affect the other. Hence its
 	impact on those are not considered. Since the system is symmetric about the centre,
 	if a molecule is at the centre of the box, it cannot hve an impacting potential greater than the boxlength/2.
-	For the molecules situated at the rigth edge of the box, the impact will be on the molecules of left edge (being periodic system)
+	For the molecules situated at the rigth edge of the box,
+	the impact will be on the molecules of left edge (being periodic system)
 	*/
 
 	if(rc2 > boxby2){

@@ -20,8 +20,8 @@ vy = [0] * N
 fx = [0] * N
 fy = [0] * N
 
-os.system('rm -rf output')
-os.system('mkdir output')
+os.system('rm -rf Output')
+os.system('mkdir Output')
 
 temp = 0.1 #temperature in scaled units
 box = 5.5 #total box length

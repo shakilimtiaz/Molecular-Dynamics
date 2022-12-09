@@ -2,6 +2,7 @@ import numpy as np
 import random
 import matplotlib
 import os
+import math
 
 npart = 7 #7 points representing the particles are along each direction
 N = (npart - 1)*(npart - 1) #N is the number of real particles
@@ -16,6 +17,8 @@ xm = [0] * N #approximation of the previous x particle position
 ym = [0] * N #approximation of the previous y particle position
 vx = [0] * N #x velocity array
 vy = [0] * N
+fx = [0] * N
+fy = [0] * N
 
 os.system('rm -rf output')
 os.system('mkdir output')
@@ -56,17 +59,17 @@ for i in range(1, npart):
 	for j in range(1, npart):
 		I = j + (i - 1)*(npart - 1)
 		if i == 1 and j == 1:
-			x[1] = a/2
-			y[1] = a/2
+			x[0] = a/2
+			y[0] = a/2
 		else:
-			x[I] = x[1] + (i-1)*a + rand_int*0.0005
-			y[I] = y[1] + (i-1)*a + rand_int*0.0005
+			x[I-1] = x[0] + (i-1)*a + rand_int*0.0005
+			y[I-1] = y[0] + (i-1)*a + rand_int*0.0005
 
 for i in range(1, npart):
 	for j in range(1, npart):
 		I = j + (i - 1)*(npart - 1)
-		vx[I] = float(rand_int - 0.5)
-		vy[I] = float(rand_int - 0.5)
+		vx[I-1] = float(rand_int - 0.5)
+		vy[I-1] = float(rand_int - 0.5)
 #Since, initial kinetic energy must be zero, and energy is conserved
 #we initiate with zero sum of velocities along x and y direction
 #sumvx and sumvy are the component velocity of the centre of mass
@@ -79,10 +82,10 @@ sumv2y = 0.0
 sumv2 = 0.0
 
 for i in range(1, N+1):
-	sumvx = sumvx + vx[i]
-	sumvy = sumvy + vy[i]
-	sumv2x = sumv2x + vx[i]*vx[i]
-	sumv2y = sumv2y + vy[i]*vy[i]
+	sumvx = sumvx + vx[i-1]
+	sumvy = sumvy + vy[i-1]
+	sumv2x = sumv2x + vx[i-1]*vx[i-1]
+	sumv2y = sumv2y + vy[i-1]*vy[i-1]
 
 #Average sum of velocities
 sumvx = sumvx/N
@@ -93,7 +96,7 @@ sumv2y = sumv2y/N
 #Sum of square velocities
 sumv2 = sumv2x+ sumv2y
 #velocity scaling factor (kT/(0.5mv^2)
-fs = sqrt(2.*temp/sumv2)
+fs = math.sqrt(2.*temp/sumv2)
 
 #Subtract the individual velocities from the average sum of
 #velocities and scale it by the scaling factor
@@ -101,11 +104,11 @@ fs = sqrt(2.*temp/sumv2)
 for i in range(1, npart):
 	for j in range(1, npart):
 		I = j + (i-1)*(npart-1) #particle index
-		vx[I] = (vx[I] - sumvx)*fs
-		vy[I] = (vy[I] - sumvy)*fs
+		vx[I-1] = (vx[I-1] - sumvx)*fs
+		vy[I-1] = (vy[I-1] - sumvy)*fs
 		#Find the previous positions
-		xm[I] = x[I] - vx[I]*delt
-		ym[I] = y[I] - vy[I]*delt
+		xm[I-1] = x[I-1] - vx[I-1]*delt
+		ym[I-1] = y[I-1] - vy[I-1]*delt
 
 #Start the time loop
 t = 0.0
@@ -114,8 +117,8 @@ for K in range(0, timesteps):
 	for i in range(1, npart):
 		for j in range(1, npart):
 			I = j + (i - 1)*(npart - 1)
-			fx[I] = 0.0
-			fy[I] = 0.0
+			fx[I-1] = 0.0
+			fy[I-1] = 0.0
 
 	#start with zero potential energy
 	en = 0.0
@@ -127,8 +130,8 @@ for K in range(0, timesteps):
 	for i in range(1, N):
 		for j in range(1, N+1):
 				#calculate the difference between the molecules one by one*/
-				xr = x[i] - x[j]
-				yr = y[i] - y[j]
+				xr = x[i-1] - x[j-1]
+				yr = y[i-1] - y[j-1]
 				#If the difference happens to be out of the box,
 				#create an image particle in the box maintaining the periodicity
 
@@ -156,10 +159,10 @@ for K in range(0, timesteps):
 					#By Newton's thrid law if the first particle is
 					#moved to right the seond in the interaction would move left
 
-					fx[i] = fx[i] + ff*xr
-					fy[i] = fy[i] + ff*yr
-					fx[j] = fx[j] - ff*xr
-					fy[j] = fy[j] - ff*yr
+					fx[i-1] = fx[i-1] + ff*xr
+					fy[i-1] = fy[i-1] + ff*yr
+					fx[j-1] = fx[j-1] - ff*xr
+					fy[j-1] = fy[j-1] - ff*yr
 					en = en + 4.*r6i*(r6i-1.) - ecut
 
 #Integrate the equations of motion: push the particles to a new position
@@ -171,8 +174,8 @@ for K in range(0, timesteps):
 
 		for i in range(1, N + 1):
 			#Calculate the new positions from the verlet algorithm
-			xx = 2*x[i] - xm[i] +delt*delt*fx[i]
-			yy = 2*y[i] - ym[i] +delt*delt*fy[i]
+			xx = 2*x[i-1] - xm[i-1] +delt*delt*fx[i-1]
+			yy = 2*y[i-1] - ym[i-1] +delt*delt*fy[i-1]
 
 			if xx > box:
 				xx = xx - box
@@ -184,8 +187,8 @@ for K in range(0, timesteps):
 			elif yy < 0:
 				yy = yy + box
 			
-			xr = xx - xm[i]
-			yr = yy - ym[i]
+			xr = xx - xm[i-1]
+			yr = yy - ym[i-1]
 
 			if xr > boxby2:
 				xr = xr-box;
@@ -197,22 +200,22 @@ for K in range(0, timesteps):
 			elif yr < -boxby2:
 				yr = yr + box
 			
-			vx[i] = xr/(2.*delt);
-			vy[i] = yr/(2.*delt);
+			vx[i-1] = xr/(2.*delt);
+			vy[i-1] = yr/(2.*delt);
 
 			#Update the centre of mass velocities
-			sumvx = sumvx + vx[i]
-			sumvy = sumvy + vy[i]
-			sumv2x = sumv2x + vx[i]*vx[i]
-			sumv2y = sumv2y + vy[i]*vy[i]
+			sumvx = sumvx + vx[i-1]
+			sumvy = sumvy + vy[i-1]
+			sumv2x = sumv2x + vx[i-1]*vx[i-1]
+			sumv2y = sumv2y + vy[i-1]*vy[i-1]
 
 			#Update positions in previous time
-			xm[i] = x[i]
-			ym[i] = y[i]
+			xm[i-1] = x[i-1]
+			ym[i-1] = y[i-1]
 			
 			#Update positions in current time
-			x[i] = xx
-			y[i] = yy
+			x[i-1] = xx
+			y[i-1] = yy
 
 		sumv2 = sumv2x + sumv2y
 
@@ -221,3 +224,6 @@ for K in range(0, timesteps):
 
 		#Total energy per particle
 		etot = (en + 0.5*sumv2)/N
+
+#Forward the time
+t = t + delt

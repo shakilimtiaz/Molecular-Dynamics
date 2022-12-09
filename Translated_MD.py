@@ -27,10 +27,10 @@ temp = 0.1 #temperature in scaled units
 box = 5.5 #total box length
 a = box/(npart - 2) #how much space is available to one molecule
 
-	#Explanation: Suppose 3 molecules occupy a length of 2.
-	#Then how much length is available for each molecule?
-	#This is given by 2/3=0.66. This is in fact the length of freedom for the molecule.
-	#The reason of taking npart-2 (actual particles are npart-1) is an attempt to get how much length a particle does fully enjoy.
+#Explanation: Suppose 3 molecules occupy a length of 2.
+#Then how much length is available for each molecule?
+#This is given by 2/3=0.66. This is in fact the length of freedom for the molecule.
+#The reason of taking npart-2 (actual particles are npart-1) is an attempt to get how much length a particle does fully enjoy.
 
 box = box + a
 boxby2 = box*0.5 #half of the updated full box length
@@ -123,9 +123,9 @@ for K in range(0, timesteps):
 	#start with zero potential energy
 	en = 0.0
 
-	#loop over all the particles:
-	#i should start from 1 to N-1 and j from 2 to N
-	#just to distinguish between the particles
+#loop over all the particles:
+#i should start from 1 to N-1 and j from 2 to N
+#just to distinguish between the particles
 
 	for i in range(1, N):
 		for j in range(1, N+1):
@@ -166,7 +166,7 @@ for K in range(0, timesteps):
 					en = en + 4.*r6i*(r6i-1.) - ecut
 
 #Integrate the equations of motion: push the particles to a new position
-		#Once again initiate the centre of mass velocities to be zero
+#Once again initiate the centre of mass velocities to be zero
 		sumvx = 0.0
 		sumvy = 0.0
 		sumv2x = 0.0

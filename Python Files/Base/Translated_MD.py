@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import matplotlib
+import matplotlib.pyplot as plt
 import os
 import math
 
@@ -20,8 +20,8 @@ vy = [0] * N
 fx = [0] * N
 fy = [0] * N
 
-os.system('rm -rf Output')
-os.system('mkdir Output')
+os.system('rm -rf output')
+os.system('mkdir output')
 
 temp = 0.1 #temperature in scaled units
 box = 5.5 #total box length
@@ -43,7 +43,7 @@ if rc2 > boxby2:
 rc2 = rc2*rc2 #find rcut square
 ecut = 1./(rc2*rc2*rc2)
 ecut = 4.*ecut*(ecut-1) # value of the LJ potential at the rcut.
-delt = 1.e-3; # time step
+delt = 1.e-2; # time step
 timesteps = (int) (1./delt) # no of time steps required to reach 1 unit in steps of delt.
 timesteps = timesteps + 10002 # + two more time steps
 #this is baseless anyway and is done just to make the total timesteps to be equal to 1000.
@@ -53,8 +53,11 @@ timesteps = timesteps + 10002 # + two more time steps
 #i and j are the particle indices along x and y direction respectively
 
 rand_int = np.random.randint(0,1)
-
-
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++				
+#						File Opening
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+fp = open("part_1.txt","w+")
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 for i in range(1, npart):
 	for j in range(1, npart):
 		I = j + (i - 1)*(npart - 1)
@@ -63,7 +66,13 @@ for i in range(1, npart):
 			y[0] = a/2
 		else:
 			x[I-1] = x[0] + (i-1)*a + rand_int*0.0005
-			y[I-1] = y[0] + (i-1)*a + rand_int*0.0005
+			y[I-1] = y[0] + (j-1)*a + rand_int*0.0005
+
+		#fp.write("%d \t %f \t %f\n" %(I, x[I-1],y[I-1]))
+		#plt.scatter(x[I-1],y[I-1])
+		#plt.pause(0.05)
+
+		
 
 for i in range(1, npart):
 	for j in range(1, npart):
@@ -109,11 +118,15 @@ for i in range(1, npart):
 		#Find the previous positions
 		xm[I-1] = x[I-1] - vx[I-1]*delt
 		ym[I-1] = y[I-1] - vy[I-1]*delt
-
-#Start the time loop
+		
+		# Write down the updated particle positions in a file 
+		fp.write("%d \t %f \t %f\n" %(I, x[I-1],y[I-1]))
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++				
+#						Start the time loop
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 t = 0.0
-
-for K in range(0, timesteps):
+# ------------------------------------------------------------------------------
+for K in range(timesteps):	
 	for i in range(1, npart):
 		for j in range(1, npart):
 			I = j + (i - 1)*(npart - 1)
@@ -122,10 +135,10 @@ for K in range(0, timesteps):
 
 	#start with zero potential energy
 	en = 0.0
-
-#loop over all the particles:
-#i should start from 1 to N-1 and j from 2 to N
-#just to distinguish between the particles
+	# -------------------------------------------------------------------------
+	#loop over all the particles:
+	#i should start from 1 to N-1 and j from 2 to N
+	#just to distinguish between the particles
 
 	for i in range(1, N):
 		for j in range(1, N+1):
@@ -161,69 +174,82 @@ for K in range(0, timesteps):
 
 					fx[i-1] = fx[i-1] + ff*xr
 					fy[i-1] = fy[i-1] + ff*yr
+					
 					fx[j-1] = fx[j-1] - ff*xr
 					fy[j-1] = fy[j-1] - ff*yr
+					
 					en = en + 4.*r6i*(r6i-1.) - ecut
+				#print("force loop over!")
+	# ---------------------------------------------------------------------------------
+	#Integrate the equations of motion: push the particles to a new position
+	#Once again initiate the centre of mass velocities to be zero
+	sumvx = 0.0
+	sumvy = 0.0
+	sumv2x = 0.0
+	sumv2y = 0.0
 
-#Integrate the equations of motion: push the particles to a new position
-#Once again initiate the centre of mass velocities to be zero
-		sumvx = 0.0
-		sumvy = 0.0
-		sumv2x = 0.0
-		sumv2y = 0.0
+	for i in range(1, N + 1):
+		#Calculate the new positions from the verlet algorithm
+		xx = 2*x[i-1] - xm[i-1] +delt*delt*fx[i-1]
+		yy = 2*y[i-1] - ym[i-1] +delt*delt*fy[i-1]
 
-		for i in range(1, N + 1):
-			#Calculate the new positions from the verlet algorithm
-			xx = 2*x[i-1] - xm[i-1] +delt*delt*fx[i-1]
-			yy = 2*y[i-1] - ym[i-1] +delt*delt*fy[i-1]
-
-			if xx > box:
-				xx = xx - box
-			elif xx < 0:
-				xx = xx + box
+		if xx > box:
+			xx = xx - box
+		elif xx < 0:
+			xx = xx + box
+		
+		if yy > box:
+			yy = yy - box
+		elif yy < 0:
+			yy = yy + box
 			
-			if yy > box:
-				yy = yy - box
-			elif yy < 0:
-				yy = yy + box
+		xr = xx - xm[i-1]
+		yr = yy - ym[i-1]
+
+		if xr > boxby2:
+			xr = xr-box;
+		elif xr < -boxby2:
+			xr = xr + box;
+
+		if yr > boxby2:
+			yr = yr-box;
+		elif yr < -boxby2:
+			yr = yr + box
 			
-			xr = xx - xm[i-1]
-			yr = yy - ym[i-1]
+		vx[i-1] = xr/(2.*delt);
+		vy[i-1] = yr/(2.*delt);
 
-			if xr > boxby2:
-				xr = xr-box;
-			elif xr < -boxby2:
-				xr = xr + box;
+		#Update the centre of mass velocities
+		sumvx = sumvx + vx[i-1]
+		sumvy = sumvy + vy[i-1]
+		sumv2x = sumv2x + vx[i-1]*vx[i-1]
+		sumv2y = sumv2y + vy[i-1]*vy[i-1]
 
-			if yr > boxby2:
-				yr = yr-box;
-			elif yr < -boxby2:
-				yr = yr + box
+		#Update positions in previous time
+		xm[i-1] = x[i-1]
+		ym[i-1] = y[i-1]
 			
-			vx[i-1] = xr/(2.*delt);
-			vy[i-1] = yr/(2.*delt);
+		#Update positions in current time
+		x[i-1] = xx
+		y[i-1] = yy
+	# -----------------------------------------------------
+	sumv2 = sumv2x + sumv2y
 
-			#Update the centre of mass velocities
-			sumvx = sumvx + vx[i-1]
-			sumvy = sumvy + vy[i-1]
-			sumv2x = sumv2x + vx[i-1]*vx[i-1]
-			sumv2y = sumv2y + vy[i-1]*vy[i-1]
+	#Instantaneous temperature
+	temp = sumv2/(2.*N)
 
-			#Update positions in previous time
-			xm[i-1] = x[i-1]
-			ym[i-1] = y[i-1]
-			
-			#Update positions in current time
-			x[i-1] = xx
-			y[i-1] = yy
+	#Total energy per particle
+	etot = (en + 0.5*sumv2)/N
+	
+	# Output the results into a file named 'output' at every 100 steps
+	if(K%100)==0:
+		path = './output/'
+		file =  open(str(path)+"part_%d.txt" %(K),"w+")
+		for i in range(npart):
+			for j in range(npart):				
+				I = j + (i-1)*(npart-1)
+				file.write("%d \t %f \t %f\n" %(I, x[I-1],y[I-1]))
+	#Forward the time
+	t = t + delt
 
-		sumv2 = sumv2x + sumv2y
-
-		#Instantaneous temperature
-		temp = sumv2/(2.*N)
-
-		#Total energy per particle
-		etot = (en + 0.5*sumv2)/N
-
-#Forward the time
-t = t + delt
+fp.close()

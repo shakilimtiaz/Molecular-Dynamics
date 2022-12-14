@@ -24,7 +24,7 @@ Lennard-Jones-type $r{−n}-r^{−m}$ pair potentials were proposed in 1925 by J
 
 ### Dependencies
 
-The code exists in two variants, C++ and Python and do not require additional installation other than the basic language compilers.
+The code exists in two variants, C++ and Python. Execution of each variant does not require additional installation other than the basic language compilers.
 
 ### Executing program
 
@@ -33,9 +33,15 @@ The code exists in two variants, C++ and Python and do not require additional in
 cd /Home/User/File_Location
 g++ Molecular_Dynamics.cpp
 ```
+```
+./a.out
+```
 
 * Python
 ```
 cd /Home/User/File_Location
 python3 Translated_MD.cpp
+```
+```
+python3 Plot_part.py
 ```
